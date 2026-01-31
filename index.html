@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Instituto Las Nieves</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#0F5227', // Verde Bosque - Main brand color
+              secondary: '#0F7268', // Verde Agua - Secondary brand color
+              accent: '#72A43B', // Verde Lima - Highlights and Accents
+              neutral: '#4A5B39', // Verde Oliva Oscuro
+              surface: '#E0F2E0', // Verde Pálido - Light backgrounds
+              mint: '#98D74B', // Menta Suave
+              emerald: '#008C5A', // Verde Esmeralda Profundo (Corrected)
+              paper: '#ffffff', // Pure white
+            },
+            fontFamily: {
+              sans: ['Montserrat', 'sans-serif'],
+              serif: ['Playfair Display', 'serif'],
+            },
+            animation: {
+              'float': 'float 6s ease-in-out infinite',
+              'fade-in-up': 'fadeInUp 0.3s ease-out forwards',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' },
+              },
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(10px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #0F5227; /* Updated to Primary Green */
+        border-radius: 5px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #0a3d1d;
+      }
+
+      body {
+        background-color: #ffffff;
+        margin: 0;
+        overflow-x: hidden;
+      }
+
+      /* Fixed Background Layer for the specific "Science Doodle" effect */
+      #background-doodle {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -10;
+        /* Using the specific science doodle pattern requested */
+        background-image: url("https://img.freepik.com/free-vector/education-doodle-set_160335-244.jpg");
+        background-repeat: repeat;
+        background-size: 500px;
+        opacity: 0.08; /* Very faint */
+        filter: grayscale(100%); /* Ensure it is grey/black sketches on white */
+        pointer-events: none;
+      }
+      
+      /* Overlay to ensure white background dominates */
+      #background-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -9;
+        background-color: rgba(255, 255, 255, 0.92);
+        pointer-events: none;
+      }
+
+      /* Animation Utility Classes */
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+      }
+      
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+      }
+      .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <!-- Background Layers -->
+    <div id="background-doodle"></div>
+    <div id="background-overlay"></div>
+    
+    <div id="root"></div>
+    <script>
+      // Simple Intersection Observer to trigger animations
+      document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('active');
+            }
+          });
+        }, { threshold: 0.1 });
+
+        const revealElements = document.querySelectorAll('.reveal');
+        revealElements.forEach(el => observer.observe(el));
+        
+        // Re-run observer when DOM changes (React renders)
+        const observerMut = new MutationObserver(() => {
+           const newElements = document.querySelectorAll('.reveal:not(.observed)');
+           newElements.forEach(el => {
+             observer.observe(el);
+             el.classList.add('observed');
+           });
+        });
+        
+        observerMut.observe(document.body, { childList: true, subtree: true });
+      });
+    </script>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
